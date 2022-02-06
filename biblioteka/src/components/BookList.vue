@@ -2,7 +2,7 @@
   <div>
     <b-pagination
       v-model="currentPage"
-      :total-rows=20
+      :total-rows="books.length"
       :per-page="perPage"
       aria-controls="image-table"
     ></b-pagination>
@@ -10,7 +10,7 @@
       id="image-table"
       hover
       fixed
-      :items="items"
+      :items="books"
       :fields="fields"
       small
       :per-page="perPage"
@@ -20,7 +20,7 @@
     </b-table>
     <b-pagination
       v-model="currentPage"
-      :total-rows=20
+      :total-rows="books.length"
       :per-page="perPage"
       aria-controls="image-table"
     ></b-pagination>
@@ -31,37 +31,35 @@
 import { mapActions, mapState } from "vuex";
 
 export default {
-  name: 'BookList',
+  name: "BookList",
   data() {
-      return {
-        fields: ['title', 'author', 'genre'],
-        items: [],
-        currentPage: 1,
-        perPage: 10
-      }
-    },
-    computed: {
-      ...mapState([
-        'books'
-      ])
-    },
+    return {
+      fields: ["title", "author", "genre"],
+      currentPage: 1,
+      perPage: 10,
+    };
+  },
 
-     mounted() {
-      this.books.slice(this.currentPage * this.perPage, (this.currentPage + 1) * this.perPage).map( id => {
-        this.getItem(id).then( obj => this.items.push(obj) );
-      });
-    },
+  mounted() {
+    this.fetchBooks();
+    this.fetchRentBooks();
+  },
+
+  computed: {
+    ...mapState(["books"]),
+  },
+  methods: {
+    ...mapActions(["fetchBooks","fetchRentBooks"]),
 
     rowClicked(record, index) {
-        this.$router.push({ name: 'Single', params: { id: record.objectID } });
-      }
-
-    
+      this.$router.push({ name: "Single", params: { id: record.id } });
+    },
+  },
 };
 </script>
 
 <style scoped>
-  .pagination {
-    justify-content: center;
-  }
+.pagination {
+  justify-content: center;
+}
 </style>

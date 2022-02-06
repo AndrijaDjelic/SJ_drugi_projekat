@@ -6,12 +6,17 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     books: [],
+    rentBooks: [],
     token: ''
   },
 
   mutations: {
-    setBooks(state, bks) {
-      state.books = bks;
+    addBooks(state, allBooks) {
+      state.books = allBooks;
+    },
+
+    addRentBooks(state, allRentBooks) {
+      state.rentBooks = allRentBooks;
     },
 
     setToken(state, token) {
@@ -28,32 +33,40 @@ export default new Vuex.Store({
 
   actions: {
 
-    fetchBooks({commit}){
+    fetchBooks({ commit }) {
       fetch('http://127.0.0.1:8500/api/books/all')
-        .then( obj => obj.json() )
-          .then( res => commit('setBooks', res) );
+        .then(obj => obj.json())
+        .then(res => commit('addBooks', res));
     },
 
-    getItem({ commit, state }, id) {
-      return new Promise( (resolve, reject) => {
-        const item = state.items.filter( item => item.objectID == id )[0];
-        
-        if (item) {
-          resolve(item);
-        } else {
-          fetch(`http://127.0.0.1:8500/api/books/findById/${id}`)
-            .then( obj => obj.json())
-            .then( res => {
-              fetch(`http://127.0.0.1:8000/api/messages/${res.objectID}`, {
-                headers: { 'Authorization': `Bearer ${state.token}` }
-              }).then( resp => resp.json() )
-                .then( comments => {
-                  res['comments'] = comments;
-                  commit('addItem', res);
-                  resolve(res);
-                });
-            });
+    fetchRentBooks({ commit }) {
+      fetch('http://127.0.0.1:8500/api/rentbooks/all')
+        .then(obj => obj.json())
+        .then(res => commit('addRentBooks', res));
+    },
+    
+
+    findBook({commit, state},id){
+
+      return new Promise((resolve,reject) =>{
+
+        const book = state.books.filter(book => book.id == id )[0];
+
+        var data = {
+          book: book,
+          available: false
+
         }
+        const rentbooks = state.rentBooks.filter(rentbook => rentbook.bookId == id );
+        for(var i in rentbooks){
+            if(rentbooks[i].available==true){
+              data.available = true;
+              break;
+            }
+        }
+
+        resolve(data);
+
       });
     },
 
@@ -62,8 +75,8 @@ export default new Vuex.Store({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(obj)
-      }).then( res => res.json() )
-        .then( tkn => commit('setToken', tkn.token) );
+      }).then(res => res.json())
+        .then(tkn => commit('setToken', tkn.token));
     },
 
     login({ commit }, obj) {
@@ -71,14 +84,14 @@ export default new Vuex.Store({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(obj)
-    }).then( res => res.json() )
-      .then( tkn => {
-        if (tkn.msg) {
-          alert(tkn.msg);
-        } else {
-          commit('setToken', tkn.token)
-        }
-      });
+      }).then(res => res.json())
+        .then(tkn => {
+          if (tkn.msg) {
+            alert(tkn.msg);
+          } else {
+            commit('setToken', tkn.token)
+          }
+        });
     },
 
     socket_comment({ commit }, msg) {

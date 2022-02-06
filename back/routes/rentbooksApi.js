@@ -24,7 +24,7 @@ function authToken(req, res, next) {
         next();
     });
 }
-route.use(authToken);
+//route.use(authToken);
 
 route.get('/all', (req, res) => {
     RentBooks.findAll(

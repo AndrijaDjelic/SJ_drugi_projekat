@@ -1,5 +1,5 @@
 const express = require('express');
-const { sequelize, Books } = require('../models');
+const { sequelize, Books,RentBooks } = require('../models');
 const { newBookValidation, updateBookValidation } = require('../validation.js');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -24,9 +24,10 @@ function authToken(req, res, next) {
     next();
   });
 }
-route.use(authToken);
+
 
 route.get('/all', (req, res) => {
+//  console.log('getAllBooks pozvan')
   Books.findAll()
     .then(rows => res.json(rows))
     .catch(err => res.status(500).json(err));

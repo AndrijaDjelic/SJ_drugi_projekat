@@ -1,6 +1,7 @@
 <template>
   <div>
     <Header :subtitle="subtitle"/>
+    <SingleBook :data="data"/>
   </div>
 </template>
 
@@ -19,13 +20,19 @@ export default {
     },
     data(){
         return{
-            subtitle:'Book'
+            subtitle:'Book',
+            data:null
         }
     },
+
     methods:{
-        ...mapActions([
-        'getBook'
-      ])
+    ...mapActions(["findBook"]),
+    },
+
+    mounted(){
+        this.findBook(this.$route.params.id).then(res =>{
+          this.data = res;
+        });
     }
 }
 </script>

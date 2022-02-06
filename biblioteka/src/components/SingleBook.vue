@@ -1,12 +1,17 @@
 <template>
   <div>
 
-    <div class="book">
-      <ul>
-        <li>Title: {{ image.artistDisplayName }}</li>
-        <li>Author: {{ image.isHighlight }}</li>
-        <li>Genre: {{ image.accessionYear }}</li>
+    <div v-if="data">
+      <div class = "book">
+        <ul>
+        <li>Title: {{ data.book.title }}</li>
+        <li>Author: {{ data.book.author }}</li>
+        <li>Genre: {{ data.book.genre }}</li>
+        <li>Available: {{ data.available }}</li>
       </ul>
+    </div>
+
+      
     </div>
 
   </div>
@@ -19,12 +24,16 @@ import { mapActions, mapState } from "vuex";
     name: 'SingleBook',
     
     props: {
-      image: Object
+      data: Object
     }
   }
 
 </script>
 
 <style scoped>
-
+.book{
+  left: -10px;
+  width: 300px;
+  height: 120px;
+}
 </style>
