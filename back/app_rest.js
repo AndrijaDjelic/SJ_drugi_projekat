@@ -17,9 +17,9 @@ var corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 
-app.use('/admin/books', booksRt);
-app.use('/admin/rentbooks', rentBooksRt);
-app.use('/admin/users', usersRt);
+app.use('/api/books', booksRt);
+app.use('/api/rentbooks', rentBooksRt);
+app.use('/api/users', usersRt);
 
 
 app.listen({ port: 8500 }, async () => {

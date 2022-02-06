@@ -8,7 +8,7 @@ require('dotenv').config();
 const app = express();  
 
 var corsOptions = {
-    origin: ['http://127.0.0.1:8000', 'http://localhost:8000'],
+    origin: ['http://127.0.0.1:8000', 'http://localhost:8000', 'http://127.0.0.1:8081','http://localhost:8081'],
     //origin: '*',
     optionsSuccessStatus: 200
 }
@@ -44,10 +44,11 @@ app.post('/register', (req, res) => {
 
 app.post('/login', (req, res) => {
     console.log('Pozvan post login port 9000');
+    console.log(`Username iz json ${req.body.username}, Sifra iz json ${req.body.password}`);
     Users.findOne({ where: { username: req.body.username } })
         .then(usr => {
             console.log(`Sifra u bazi ${usr.password}, Sifra u login ${req.body.password}`);
-            if (bcrypt.compareSync(req.body.password, usr.password) && usr.role=='admin') {
+            if (bcrypt.compareSync(req.body.password, usr.password)) {
                 console.log('Tacna sifra');
                 const obj = {
                     userId: usr.id,
