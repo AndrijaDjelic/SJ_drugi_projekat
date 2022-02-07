@@ -19,6 +19,16 @@ export default new Vuex.Store({
       state.rentBooks = allRentBooks;
     },
 
+    rentABook(state, obj){
+      const rentbooks = state.rentBooks.filter(rentbook => rentbook.bookId == obj.id );
+        for(var i in rentbooks){
+            if(rentbooks[i].available==true){
+              rentbooks[i].available = false;
+              break;
+            }
+        }
+    },
+
     setToken(state, token) {
       state.token = token;
       localStorage.token = token;
@@ -55,7 +65,6 @@ export default new Vuex.Store({
         var data = {
           book: book,
           available: false
-
         }
         const rentbooks = state.rentBooks.filter(rentbook => rentbook.bookId == id );
         for(var i in rentbooks){
@@ -94,9 +103,9 @@ export default new Vuex.Store({
         });
     },
 
-    socket_comment({ commit }, msg) {
-      const comment = JSON.parse(msg);
-      commit('addComment', { artId: comment.artId, comment: comment });
+    socket_rent({ commit }, msg) {
+      const book = JSON.parse(msg);
+      commit('rentABook', book);
     }
   }
 })

@@ -1,16 +1,35 @@
 const express = require('express');
 const { sequelize } = require('./models');
-
-
-
-
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
+const http = require('http');
+const { Server } = require("socket.io");
 require('dotenv').config();
 
 const app = express();
+const server = http.createServer(app);
 
+const io = new Server(server, {
+    cors: {
+        origin: ['http://127.0.0.1:8081', 'http://localhost:8081'],
+        methods: ['GET', 'POST', 'OPTIONS'],
+        credentials: true,
+        allowedHeaders: ''
+    },
+    allowEIO3: true
+    
+});
 
+server.listen(3000);
+
+var corsOptions = {
+    origin: ['http://127.0.0.1:8081','http://localhost:8081'],
+    optionsSuccessStatus: 200
+}
+
+app.use(express.json());
+app.use(cors(corsOptions));
 
 function getCookies(req) {
     if (req.headers.cookie == null) return {};
@@ -42,7 +61,6 @@ function authToken(req, res, next) {
     });
 }
 
-
 app.get('/register', (req, res) => {
     res.sendFile('register.html', { root: './static' });
 });
@@ -55,8 +73,33 @@ app.get('/', authToken, (req, res) => {
     res.sendFile('index.html', { root: './static' });
 });
 
+function authSocket(msg, next) {
+    if (msg[1].token == null) {
+        next(new Error("Not authenticated"));
+    } else {
+        jwt.verify(msg[1].token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+            if (err) {
+                next(new Error(err));
+            } else {
+                msg[1].user = user;
+                next();
+            }
+        });
+    }
+}
 
-app.use(express.static(path.join(__dirname, 'static')));
+io.on('connection', socket => {
+    socket.use(authSocket);
+
+    console.log('Connection established');
+
+    socket.on('rent', msg => {
+       console.log('pozvan socket rent i poruka od msg' + msg);
+    });
+
+    socket.on('error', err => socket.emit('error', err.message) );
+});
+
 
 app.listen({ port: 8000 }, async () => {
     await sequelize.authenticate();
