@@ -40,6 +40,18 @@ module.exports = {
         bookId: 3,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        available:true,
+        bookId: 4,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        available:true,
+        bookId: 5,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {});
   },

@@ -13,6 +13,9 @@
           <b-navbar-nav>
             <b-nav-item to="/books">Books</b-nav-item>
           </b-navbar-nav>
+          <b-navbar-nav>
+            <b-nav-item to="/history">History</b-nav-item>
+          </b-navbar-nav>
 
           <b-navbar-nav class="ml-auto">
             <b-nav-item v-if="!token" to="/register">Register</b-nav-item>

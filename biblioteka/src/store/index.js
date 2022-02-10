@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     books: [],
     rentBooks: [],
+    history: [],
     token: ''
   },
 
@@ -17,6 +18,10 @@ export default new Vuex.Store({
 
     addRentBooks(state, allRentBooks) {
       state.rentBooks = allRentBooks;
+    },
+
+    addHistory(state, allHistory) {
+      state.history = allHistory;
     },
 
     rentABook(state, obj){
@@ -53,6 +58,25 @@ export default new Vuex.Store({
       fetch('http://127.0.0.1:8500/api/rentbooks/all')
         .then(obj => obj.json())
         .then(res => commit('addRentBooks', res));
+    },
+
+    fetchHistory({ commit },userId) {
+      fetch(`http://127.0.0.1:8500/api/history/showBy/${userId}`, {
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.state.token}` }
+      })
+        .then(obj => obj.json())
+        .then(res => {
+          debugger;
+          var data = {
+            title: 'hello',
+            author: 'author',
+            genre: 'genre',
+            date: 'genre'
+          }
+          debugger;
+          return commit('addHistory', data);
+          
+        })
     },
     
 

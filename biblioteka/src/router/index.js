@@ -5,6 +5,7 @@ import Register from '@/views/Register.vue';
 import Login from '@/views/Login.vue';
 import Books from '@/views/Books.vue';
 import Single from '@/views/Single.vue';
+import History from '@/views/History.vue';
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,11 @@ const routes = [
     path: '/books',
     name: 'Books',
     component: Books
+  },
+  {
+    path: '/history',
+    name: 'History',
+    component: History
   },
   {
     path: '/single/:id',

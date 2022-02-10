@@ -100,9 +100,12 @@ io.on('connection', socket => {
         .then(rentBook =>{
             rentBook.available = false;
             rentBook.save();
+            socket.emit('notification', 'Book successfully rented');
             // io.emit('rent', JSON.stringify(msg));
         })
-        .catch(err => res.status(500).json(err));
+        .catch(err => {
+            socket.emit('notification', 'The book is currently unavailable');
+        });
     });
     
     socket.on('error', err => socket.emit('error', err.message) );

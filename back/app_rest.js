@@ -1,11 +1,12 @@
 const express = require('express');
-const { sequelize, Users } = require('./models');
+const { sequelize } = require('./models');
 const cors = require('cors');
 
 
 const booksRt = require('./routes/booksApi');
 const rentBooksRt = require('./routes/rentbooksApi');
 const usersRt = require('./routes/usersApi');
+const historiesRt = require('./routes/historyApi');
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.use(cors(corsOptions));
 app.use('/api/books', booksRt);
 app.use('/api/rentbooks', rentBooksRt);
 app.use('/api/users', usersRt);
-
+app.use('/api/history', historiesRt);
 
 app.listen({ port: 8500 }, async () => {
     await sequelize.authenticate();

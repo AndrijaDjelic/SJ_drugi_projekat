@@ -3,22 +3,26 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class JoinRentsRentBooks extends Model {
+  class Histories extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({Rents,RentBooks}) {
+    static associate({Users,RentBooks}) {
       // define association here
-      this.belongsTo(Rents, {foreignKey: 'rentId', as: 'rent'});
+      this.belongsTo(Users, {foreignKey: 'userId', as: 'user'});
       this.belongsTo(RentBooks, {foreignKey: 'rentBookId', as: 'rentBook'});
     }
   };
-  JoinRentsRentBooks.init({
+  Histories.init({
+    active: {
+      type:DataTypes.BOOLEAN,
+      allowNull: false
+    }
   }, {
     sequelize,
-    modelName: 'JoinRentsRentBooks',
+    modelName: 'Histories',
   });
-  return JoinRentsRentBooks;
+  return Histories;
 };

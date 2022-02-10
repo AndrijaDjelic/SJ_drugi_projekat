@@ -11,7 +11,7 @@
 
         <b-button @click="rentABook($event)" v-if="data.available==true" variant="outline-primary" >Reserve/Rent</b-button>
         <b-button v-else disabled size="lg">Reserve/Rent</b-button>
-        
+        <b-alert v-model="visible" variant="success" dismissible >{{this.notifmsg}}</b-alert>
       </ul>
     </div>
       
@@ -28,7 +28,8 @@ import { mapActions, mapState } from "vuex";
     
     data(){
         return{
-          message:''
+          notifmsg:'',
+          visible: false
         };
     },
 
@@ -48,7 +49,15 @@ import { mapActions, mapState } from "vuex";
         this.$socket.emit('rent', {body: this.data.book, token: this.token});
         // debugger;
       }
-    }
+    },
+
+    sockets: {
+      notification(notif){
+        // alert(notif);
+        this.visible = true;
+        this.notifmsg = notif;
+      }
+  }
   }
   
 

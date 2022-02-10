@@ -12,8 +12,6 @@
       <b-form-group label="Password:" label-for="password">
         <b-form-input id="password" v-model="form.password" type="password" required></b-form-input>
       </b-form-group>
-
-      <b-form-checkbox id="admin" v-model="form.admin" :value="true" :unchecked-value="false">Admin</b-form-checkbox>
       
       <br>
       <b-button type="submit" variant="primary">Submit</b-button>
@@ -37,8 +35,7 @@
       return {
         form: {
           name: '',
-          password: '',
-          admin: false
+          password: ''
         }
       }
     },
