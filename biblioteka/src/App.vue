@@ -75,6 +75,11 @@ export default {
     logout() {
       this.removeToken();
     }
+  },
+  sockets: {
+      error(err) {
+        alert(err);
+      }
   }
 };
 </script>

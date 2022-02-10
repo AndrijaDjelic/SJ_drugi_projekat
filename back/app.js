@@ -1,10 +1,11 @@
 const express = require('express');
-const { sequelize } = require('./models');
+const { sequelize,RentBooks } = require('./models');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require("socket.io");
+const { Op } = require("sequelize");
 require('dotenv').config();
 
 const app = express();
@@ -79,7 +80,7 @@ function authSocket(msg, next) {
     } else {
         jwt.verify(msg[1].token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
             if (err) {
-                next(new Error(err));
+                next(new Error('You need to be logged in'));
             } else {
                 msg[1].user = user;
                 next();
@@ -94,9 +95,16 @@ io.on('connection', socket => {
     console.log('Connection established');
 
     socket.on('rent', msg => {
-       console.log('pozvan socket rent i poruka od msg' + msg);
+       console.log('pozvan socket rent i poruka od msg');
+       RentBooks.findOne({ where: {[Op.and]: [{bookId: msg.body.id}, {available: true}] }  })
+        .then(rentBook =>{
+            rentBook.available = false;
+            rentBook.save();
+            // io.emit('rent', JSON.stringify(msg));
+        })
+        .catch(err => res.status(500).json(err));
     });
-
+    
     socket.on('error', err => socket.emit('error', err.message) );
 });
 

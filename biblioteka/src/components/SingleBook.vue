@@ -9,8 +9,9 @@
         <li>Genre: {{ data.book.genre }}</li>
         <li>Available: {{ data.available }}</li>
 
-        <b-button v-if="data.available==true" variant="outline-primary" @click="rentABook()">Reserve/Rent</b-button>
+        <b-button @click="rentABook($event)" v-if="data.available==true" variant="outline-primary" >Reserve/Rent</b-button>
         <b-button v-else disabled size="lg">Reserve/Rent</b-button>
+        
       </ul>
     </div>
       
@@ -25,13 +26,27 @@ import { mapActions, mapState } from "vuex";
   export default {
     name: 'SingleBook',
     
+    data(){
+        return{
+          message:''
+        };
+    },
+
     props: {
       data: Object
     },
 
+     computed: {
+      ...mapState([
+        'token'
+      ])
+    },
+
     methods:{
-      rentABook(){
-        this.$socket.emit('rent', data.book);
+      rentABook(e){
+        e.preventDefault();
+        this.$socket.emit('rent', {body: this.data.book, token: this.token});
+        // debugger;
       }
     }
   }

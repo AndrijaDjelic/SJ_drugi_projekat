@@ -106,6 +106,7 @@ export default new Vuex.Store({
     socket_rent({ commit }, msg) {
       const book = JSON.parse(msg);
       commit('rentABook', book);
+      
     }
   }
 })

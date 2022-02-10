@@ -32,7 +32,6 @@ export default {
     mounted(){
         this.findBook(this.$route.params.id).then(res =>{
           this.data = res;
-          debugger;
         });
     }
 }
